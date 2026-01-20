@@ -1,0 +1,11 @@
+{
+    "name": "fkmit-fido-webview-plugin",
+    "version": "0.0.1",
+    "description": "Fido support for Android Webviews.",
+    "cordova": {
+        "id": "fkmit-fido-webview-plugin",
+        "platforms": ["android"]
+    },
+    "keywords": [],
+    "author": "BossGermany"
+}
