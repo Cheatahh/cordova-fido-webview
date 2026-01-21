@@ -7,6 +7,8 @@ import org.json.JSONArray
 import org.json.JSONObject
 import android.util.Log
 
+import android.app.Activity
+import android.nfc.NfcAdapter
 import com.yubico.yubikit.android.YubiKitManager
 import com.yubico.yubikit.android.transport.nfc.NfcConfiguration
 import com.yubico.yubikit.android.transport.nfc.NfcDispatcher
@@ -20,16 +22,15 @@ import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
 private const val NFC_TIMEOUT = 5000
 
-@OptIn(ExperimentalAtomicApi::class)
 class FidoIntegration : CordovaPlugin(), NFCDiscoveryDispatcher {
 
     private var nfcManager: NfcYubiKeyManager? = null
     private var yubikit: YubiKitManager? = null
-    private val yubikitDiscovery = AtomicReference<((FidoDevice) -> Unit)?>(null)
+    private var yubikitDiscovery: ((YubiKeyDevice) -> Unit)? = null
 
     private fun ensureYubikitInitialized() {
         if(nfcManager === null)
-            nfcManager = NfcYubiKeyManager(this, object : NfcDispatcher {
+            nfcManager = NfcYubiKeyManager(cordova.activity, object : NfcDispatcher {
                 private var nfcAdapter: NfcAdapter? = null
                 private var nfcReaderDispatcher: NfcReaderDispatcher? = null
                 override fun enable(activity: Activity, nfcConfiguration: NfcConfiguration, handler: NfcDispatcher.OnTagHandler) {
@@ -56,21 +57,21 @@ class FidoIntegration : CordovaPlugin(), NFCDiscoveryDispatcher {
         }
         fun useHandler(handler: () -> Any): Boolean {
             runCatching(handler).onSuccess { result ->
-                callback.sendStatusResult(StatusCodes.Success, result)
+                sendStatusResult(StatusCodes.Success, result)
             }.onFailure { err ->
-                callback.sendStatusResult(StatusCodes.Failure, err.message.toString())
+                sendStatusResult(StatusCodes.Failure, err.message.toString())
             }
             return true
         }
         return when(action) {
-            "getAssertion" -> useHandler { FidoHandlers.executeGetAssertion(args, this@FidoIntegration) }
+            "getAssertion" -> useHandler { FidoHandlers.getAssertion(args, this@FidoIntegration) }
             else -> false
         }
     }
 
     override fun startDeviceDiscovery(callback: (YubiKeyDevice) -> Unit) {
         synchronized(this) {
-            yubikitDiscovery.store(callback)
+            yubikitDiscovery = callback
             yubikit?.startNfcDiscovery(NfcConfiguration().timeout(NFC_TIMEOUT), this) { device ->
                 callback(device)
             }
@@ -82,16 +83,17 @@ class FidoIntegration : CordovaPlugin(), NFCDiscoveryDispatcher {
 
     override fun stopDeviceDiscovery() {
         synchronized(this) {
-            yubikitDiscovery.store(null)
+            yubikitDiscovery = null
             yubikit?.stopNfcDiscovery(this)
             yubikit?.stopUsbDiscovery()
         }
     }
 
     override fun onResume(multitasking: Boolean) {
-        yubikitDiscovery.load()?.apply(::startDeviceDiscovery)
+        yubikitDiscovery?.apply(::startDeviceDiscovery)
         super.onResume()
     }
+
     override fun onPause(multitasking: Boolean) {
         stopDeviceDiscovery()
         super.onPause()
