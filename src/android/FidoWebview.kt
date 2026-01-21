@@ -7,6 +7,15 @@ import org.json.JSONArray
 import org.json.JSONObject
 import android.util.Log
 
+import com.yubico.yubikit.android.YubiKitManager
+import com.yubico.yubikit.android.transport.nfc.NfcConfiguration
+import com.yubico.yubikit.android.transport.nfc.NfcDispatcher
+import com.yubico.yubikit.android.transport.nfc.NfcReaderDispatcher
+import com.yubico.yubikit.android.transport.nfc.NfcYubiKeyManager
+import com.yubico.yubikit.android.transport.usb.UsbConfiguration
+import com.yubico.yubikit.android.transport.usb.UsbYubiKeyManager
+import com.yubico.yubikit.core.YubiKeyDevice
+
 enum class StatusCodes(val code: Int, val resultStatus: PluginResult.Status) {
     Success(1, PluginResult.Status.OK),
     Failure(2, PluginResult.Status.ERROR),
@@ -19,11 +28,6 @@ class FidoWebview : CordovaPlugin() {
             callback.with(args, ::executeGetAssertion)
             true
         }
-        "log" -> {
-            val message = requireNotNull(args.optString(0).takeIf(String::isNotBlank))
-            Log.d("FidoWebview", message)
-            true
-        }
         else -> false
     }
     private fun CallbackContext.sendStatusResult(code: StatusCodes, payload: Any) {
@@ -34,7 +38,7 @@ class FidoWebview : CordovaPlugin() {
         result.setKeepCallback(code === StatusCodes.Progress)
         sendPluginResult(result)
     }
-    private inline fun CallbackContext.with(args: JSONArray, handler: (JSONArray) -> Unit): Boolean {
+    private inline fun CallbackContext.with(args: JSONArray, handler: (JSONArray) -> Any): Boolean {
         runCatching {
             handler(args)
         }.onSuccess { result ->
@@ -54,6 +58,7 @@ class FidoWebview : CordovaPlugin() {
         val userPin = requireNotNull(args.optString(1).takeIf(String::isNotBlank)) {
             "Parameter <USER_PIN> must be a string."
         }
+
         return "Nice"
     }
 }

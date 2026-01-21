@@ -16,6 +16,14 @@
             src="org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.24"
             type="gradle" />
 
+        <framework
+            src="com.yubico.yubikit:fido:3.0.0"
+            type="gradle" />
+
+        <framework
+            src="com.yubico.yubikit:android:3.0.0"
+            type="gradle" />
+
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="FidoWebview">
                 <param name="android-package" value="com.fkmit.fido.FidoWebview"/>
