@@ -17,7 +17,10 @@
         <preference name="COMPOSE_BOM_VERSION" default="2024.12.01" />
         <preference name="YUBIKIT_VERSION" default="3.0.0" />
 
-        src/android/build-extras.gradle
+        <framework
+            src="src/android/build-extras.gradle"
+            custom="true"
+            type="gradleReference" />
 
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="FidoIntegration">
@@ -25,10 +28,10 @@
             </feature>
         </config-file>
 
-        src/android/FidoIntegration.kt
-        src/android/FidoHandlers.kt
-        src/android/StatusCodes.kt
-        src/android/NFCDiscoveryDispatcher.kt
+        <source-file src="src/android/FidoIntegration.kt" target-dir="app/src/main/kotlin/com/fkmit/fido"/>
+        <source-file src="src/android/FidoHandlers.kt" target-dir="app/src/main/kotlin/com/fkmit/fido"/>
+        <source-file src="src/android/StatusCodes.kt" target-dir="app/src/main/kotlin/com/fkmit/fido"/>
+        <source-file src="src/android/NFCDiscoveryDispatcher.kt" target-dir="app/src/main/kotlin/com/fkmit/fido"/>
 
     </platform>
 
