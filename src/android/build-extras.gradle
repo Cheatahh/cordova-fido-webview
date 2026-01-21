@@ -1,8 +1,9 @@
-
-def kotlin_version = project.hasProperty('KOTLIN_VERSION') ? project.property('KOTLIN_VERSION') : '1.9.24'
-def compose_compiler_version = project.hasProperty('COMPOSE_COMPILER_VERSION') ? project.property('COMPOSE_COMPILER_VERSION') : '1.5.15'
-def compose_bom_version = project.hasProperty('COMPOSE_BOM_VERSION') ? project.property('COMPOSE_BOM_VERSION') : '2024.12.01'
-def yubikit_version = project.hasProperty('YUBIKIT_VERSION') ? project.property('YUBIKIT_VERSION') : '3.0.0'
+ext {
+    kotlin_version = project.findProperty('KOTLIN_VERSION') ?: '1.9.24'
+    compose_compiler_version = project.findProperty('COMPOSE_COMPILER_VERSION') ?: '1.5.15'
+    compose_bom_version = project.findProperty('COMPOSE_BOM_VERSION') ?: '2024.12.01'
+    yubikit_version = project.findProperty('YUBIKIT_VERSION') ?: '3.0.0'
+}
 
 buildscript {
     repositories {
@@ -31,8 +32,8 @@ dependencies {
     implementation 'androidx.compose.ui:ui-tooling-preview'
     implementation 'androidx.compose.material3:material3'
 
-    implementation "com.yubico.yubikit:fido:${YUBIKIT_VERSION}"
-    implementation "com.yubico.yubikit:android:${YUBIKIT_VERSION}"
+    implementation "com.yubico.yubikit:fido:${yubikit_version}"
+    implementation "com.yubico.yubikit:android:${yubikit_version}"
 }
 
 android {
