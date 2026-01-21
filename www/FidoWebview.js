@@ -1,6 +1,6 @@
 const exec = require('cordova/exec');
 
-const FidoWebview = {
+const FidoIntegration = {
     StatusCodes: {
         SUCCESS: 1, // payload: result
         FAILURE: 2, // payload: exception
@@ -12,11 +12,11 @@ const FidoWebview = {
                 onStatusChanged(result.statusCode, result.payload);
             }, (err) => {
                 onStatusChanged(this.StatusCodes.FAILURE, err);
-            }, 'FidoWebview', 'getAssertion', [clientData, userPin]);
+            }, 'FidoIntegration', 'getAssertion', [clientData, userPin]);
         } catch(err) {
             onStatusChanged(this.StatusCodes.FAILURE, err);
         }
     }
 };
 
-module.exports = FidoWebview;
+module.exports = FidoIntegration;
