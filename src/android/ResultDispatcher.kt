@@ -14,7 +14,7 @@ value class ResultDispatcher(private val callback: CallbackContext) {
             put("statusCode", code.code)
             put("payload", payload)
         })
-        result.keepCallback = code.isTerminal
+        result.keepCallback = !code.isTerminal
         callback.sendPluginResult(result)
     }
 

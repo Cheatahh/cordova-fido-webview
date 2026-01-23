@@ -69,7 +69,7 @@ class FidoIntegration : CordovaPlugin(), NFCDiscoveryDispatcher {
             yubikitDiscoveryCallback = callback
             yubikitManager?.startNfcDiscovery(NfcConfiguration().timeout(NFC_TIMEOUT), cordova.activity) { device ->
                 Log.d("FIDO", "Got Device")
-                stopDeviceDiscovery()
+                //stopDeviceDiscovery()
                 currentNFCDevice = device
                 callback(device)
             }
