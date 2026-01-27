@@ -41,9 +41,16 @@
         </config-file>
 
         <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.NFC" />
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/*">
             <uses-feature
                 android:name="android.hardware.nfc"
                 android:required="true" />
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <activity
                 android:name="com.fkmit.fido.FidoWebview"
                 android:exported="false"
