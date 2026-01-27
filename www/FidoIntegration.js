@@ -26,6 +26,9 @@ const FidoIntegration = {
     },
     reset: function(onMessage /*callback (code, payload) -> void*/) {
         runExecCatching(onMessage, 'reset', []);
+    },
+    openWebview: function() {
+        runExecCatching((code, payload) => {}, 'openWebview', []);
     }
 };
 

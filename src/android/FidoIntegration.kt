@@ -1,6 +1,7 @@
 package com.fkmit.fido
 
 import android.app.Activity
+import android.content.Intent
 import android.nfc.NfcAdapter
 import android.util.Log
 import com.yubico.yubikit.android.YubiKitManager
@@ -52,6 +53,13 @@ class FidoIntegration : CordovaPlugin(), NFCDiscoveryDispatcher {
                 "getAssertion" -> RequestHandlers.getAssertion(args, this@FidoIntegration, dispatch)
                 "reset" -> {
                     stopDeviceDiscovery()
+                    dispatch.sendMessage(MessageCodes.Success, null)
+                }
+                "openWebview" -> {
+                    cordova.activity.startActivity(Intent(cordova.activity, FidoWebview::class.java).apply {
+                        putExtra("targetUrl", "https://executor.fkmitt.aizonexecute.ai")
+                        putExtra("injectJsCode", "")
+                    })
                     dispatch.sendMessage(MessageCodes.Success, null)
                 }
                 else -> return false
