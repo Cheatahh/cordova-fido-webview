@@ -14,6 +14,10 @@ enum class MessageCodes(val code: Int, val resultStatus: PluginResult.Status, va
 
     Failure(FLAG_ERROR, PluginResult.Status.ERROR, true),
 
+    FailureInvalidPin(FLAG_ERROR or 0x0001, PluginResult.Status.ERROR, true),
+
+    FailureUnsupportedDevice(FLAG_ERROR or 0x0002, PluginResult.Status.ERROR, true),
+
     SignalProgressUpdate(FLAG_SIGNAL or 0x0001, PluginResult.Status.OK, false),
 
     SignalDeviceDiscovered(FLAG_SIGNAL or 0x0002, PluginResult.Status.OK, false),

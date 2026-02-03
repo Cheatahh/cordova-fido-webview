@@ -17,14 +17,16 @@ const FidoIntegration = {
         SUCCESS: 0x1000, // payload: result
         SUCCESS_USER_CHOICE_REQUIRED: 0x1001, // payload: [{name,id}]
         FAILURE: 0x2000, // payload: exception
+        FAILURE_INVALID_PIN: 0x2001, // payload: null
+        FAILURE_UNSUPPORTED_DEVICE: 0x2002, // payload: null
         SIGNAL_PROGRESS_UPDATE: 0x3001, // payload: float
         SIGNAL_DEVICE_DISCOVERED: 0x3002, // payload: null
         SIGNAL_DEVICE_LOST: 0x3003, // payload: null
     },
     getAssertion: function(
         clientData /*string (json)*/,
-        userPin /*string | null*/,
         rpId /*string (url)*/,
+        userPin /*string | null*/,
         userId /*string (base64) | null*/,
         onMessage /*callback (code, payload) -> void*/
     ) {

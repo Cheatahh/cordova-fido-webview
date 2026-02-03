@@ -2,6 +2,8 @@
 
 package com.fkmit.fido
 
+import com.yubico.yubikit.core.application.InvalidPinException
+import com.yubico.yubikit.core.fido.CtapException
 import com.yubico.yubikit.fido.ctap.ClientPin
 import com.yubico.yubikit.fido.ctap.Ctap2Session
 import com.yubico.yubikit.fido.ctap.PinUvAuthProtocolV1
@@ -37,7 +39,15 @@ object RequestHandlers {
                 else -> {
                     val pinProtocol = PinUvAuthProtocolV1()
                     val clientPin = ClientPin(session, pinProtocol)
-                    var pinUvAuthToken = clientPin.getPinToken(userPin, ClientPin.PIN_PERMISSION_CM, null)
+                    var pinUvAuthToken = try {
+                        clientPin.getPinToken(userPin, ClientPin.PIN_PERMISSION_CM, null)
+                    } catch (_: InvalidPinException) {
+                        dispatch.sendMessage(MessageCodes.FailureInvalidPin, null)
+                        return@ctx
+                    } catch (_: CtapException) {
+                        dispatch.sendMessage(MessageCodes.FailureUnsupportedDevice, null)
+                        return@ctx
+                    }
                     dispatch.sendMessage(MessageCodes.SignalProgressUpdate, 1f / 3f)
                     val credentials = Fido.getCredentials(session, clientPin, pinUvAuthToken).filter {
                         it.rpId == rpId && it.credentialType == "public-key" && (userId === null || it.userId contentEquals userId)
