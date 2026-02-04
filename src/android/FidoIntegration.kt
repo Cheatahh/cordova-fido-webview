@@ -50,6 +50,7 @@ class FidoIntegration : CordovaPlugin(), NFCDiscoveryDispatcher {
                 }
                 "reset" -> {
                     stopDeviceDiscovery()
+                    currentNFCDevice = null
                     dispatch.sendMessage(MessageCodes.Success, null)
                 }
                 else -> return false
