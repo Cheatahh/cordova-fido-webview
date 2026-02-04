@@ -16,11 +16,11 @@ enum class MessageCodes(val code: Int, val resultStatus: PluginResult.Status, va
 
     FailureUnsupportedDevice(FLAG_ERROR or 0x0002, PluginResult.Status.ERROR, true),
 
-    FailureDeviceLost(FLAG_SIGNAL or 0x0003, PluginResult.Status.ERROR, true),
+    FailureDeviceLost(FLAG_ERROR or 0x0003, PluginResult.Status.ERROR, true),
 
-    FailureNoCredentials(FLAG_SIGNAL or 0x0004, PluginResult.Status.ERROR, true),
+    FailureNoCredentials(FLAG_ERROR or 0x0004, PluginResult.Status.ERROR, true),
 
-    FailureTooManyCredentials(FLAG_SUCCESS or 0x0005, PluginResult.Status.ERROR, true),
+    FailureTooManyCredentials(FLAG_ERROR or 0x0005, PluginResult.Status.ERROR, true),
 
     SignalProgressUpdate(FLAG_SIGNAL or 0x0001, PluginResult.Status.OK, false),
 

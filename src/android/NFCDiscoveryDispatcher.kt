@@ -19,14 +19,18 @@ interface NFCDiscoveryDispatcher {
         Log.e("DEBUG", "runWithCatching")
         try {
             block()
-        } catch (_: TagLostException) {
+        } catch (e: TagLostException) {
+            Log.w("ERROR", e)
             currentNFCDevice = null
             dispatch.sendMessage(MessageCodes.FailureDeviceLost, null)
-        } catch (_: InvalidPinException) {
+        } catch (e: InvalidPinException) {
+            Log.w("ERROR", e)
             dispatch.sendMessage(MessageCodes.FailureInvalidPin, null)
         } catch (e: CtapException) {
+            Log.w("ERROR", e)
             dispatch.sendMessage(if(e.ctapError == CtapException.ERR_NO_CREDENTIALS) MessageCodes.FailureNoCredentials else MessageCodes.FailureUnsupportedDevice, null)
         } catch (e: Exception) {
+            Log.w("ERROR", e)
             dispatch.sendMessage(MessageCodes.Failure, e.message)
         }
         Log.e("DEBUG", "runWithCatching2")
