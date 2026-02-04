@@ -22,7 +22,7 @@ function runExecCatching(onMessage, action, parameters) {
         exec((result) => {
             onMessage(result.statusCode, result.payload);
         }, (err) => {
-            onMessage(0x2000, extractMessage(err));
+            onMessage(err.statusCode, err.payload);
         }, 'FidoIntegration', action, parameters);
     } catch(err) {
         onMessage(0x2000, extractMessage(err));
