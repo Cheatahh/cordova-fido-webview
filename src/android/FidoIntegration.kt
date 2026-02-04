@@ -46,7 +46,6 @@ class FidoIntegration : CordovaPlugin(), NFCDiscoveryDispatcher {
         runCatching {
             when(action) {
                 "getAssertion" -> {
-                    stopDeviceDiscovery()
                     RequestHandlers.getAssertion(args, this@FidoIntegration, dispatch)
                 }
                 "reset" -> {
