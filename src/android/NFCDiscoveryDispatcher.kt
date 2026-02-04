@@ -1,6 +1,7 @@
 package com.fkmit.fido
 
 import android.nfc.TagLostException
+import android.util.Log
 import com.yubico.yubikit.core.YubiKeyDevice
 import com.yubico.yubikit.core.application.InvalidPinException
 import com.yubico.yubikit.core.fido.CtapException
@@ -15,6 +16,7 @@ interface NFCDiscoveryDispatcher {
     fun stopDeviceDiscovery()
 
     private fun runWithCatching(dispatch: ResultDispatcher, block: () -> Unit) {
+        Log.e("DEBUG", "runWithCatching")
         try {
             block()
         } catch (_: TagLostException) {
