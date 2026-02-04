@@ -1,5 +1,6 @@
 package com.fkmit.fido
 
+import android.nfc.TagLostException
 import android.util.Log
 import com.yubico.yubikit.core.YubiKeyDevice
 import com.yubico.yubikit.core.smartcard.SmartCardConnection
@@ -19,17 +20,23 @@ interface NFCDiscoveryDispatcher {
                 it.openConnection(SmartCardConnection::class.java)
             }
         }.onSuccess { connection ->
-            connection.use(callback)
-        }.onFailure {
-            Log.wtf("ERROR", it)
-            if(currentNFCDevice != null) {
+            try {
+                connection.use(callback)
+            } catch (_: TagLostException) {
                 currentNFCDevice = null
                 dispatch.sendMessage(MessageCodes.SignalDeviceLost, null)
             }
-            startDeviceDiscovery(InvokeOnce { device ->
-                dispatch.sendMessage(MessageCodes.SignalDeviceDiscovered, null)
-                device.openConnection(SmartCardConnection::class.java).use(callback)
-            })
+        }.onFailure {
+            try {
+                stopDeviceDiscovery()
+                startDeviceDiscovery(InvokeOnce { device ->
+                    dispatch.sendMessage(MessageCodes.SignalDeviceDiscovered, null)
+                    device.openConnection(SmartCardConnection::class.java).use(callback)
+                })
+            } catch (_: TagLostException) {
+                currentNFCDevice = null
+                dispatch.sendMessage(MessageCodes.SignalDeviceLost, null)
+            }
         }
     }
 
