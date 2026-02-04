@@ -20,6 +20,7 @@ interface NFCDiscoveryDispatcher {
         }.onSuccess { connection ->
             connection.use(callback)
         }.onFailure {
+            Log.wtf("ERROR", it)
             if(currentNFCDevice != null) {
                 currentNFCDevice = null
                 dispatch.sendMessage(MessageCodes.SignalDeviceLost, null)
