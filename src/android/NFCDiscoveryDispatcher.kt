@@ -51,7 +51,6 @@ interface NFCDiscoveryDispatcher {
                 connection.use(callback)
             }
         }.onFailure {
-            stopDeviceDiscovery()
             startDeviceDiscovery(InvokeOnce { device ->
                 dispatch.sendMessage(MessageCodes.SignalDeviceDiscovered, null)
                 runWithCatching(dispatch) {

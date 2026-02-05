@@ -48,6 +48,10 @@ class FidoIntegration : CordovaPlugin(), NFCDiscoveryDispatcher {
                 "getAssertion" -> {
                     RequestHandlers.getAssertion(args, this@FidoIntegration, dispatch)
                 }
+                "nfcDevNull" -> {
+                    startDeviceDiscovery {}
+                    dispatch.sendMessage(MessageCodes.Success, null)
+                }
                 "reset" -> {
                     stopDeviceDiscovery()
                     currentNFCDevice = null
@@ -64,6 +68,7 @@ class FidoIntegration : CordovaPlugin(), NFCDiscoveryDispatcher {
     override fun startDeviceDiscovery(callback: (YubiKeyDevice) -> Unit) {
         synchronized(this) {
             ensureYubikitInitialized()
+            stopDeviceDiscovery()
             yubikitDiscoveryCallback = callback
             yubikitManager?.startNfcDiscovery(NfcConfiguration().timeout(NFC_TIMEOUT), cordova.activity) { device ->
                 currentNFCDevice = device

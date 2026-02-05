@@ -48,6 +48,9 @@ const FidoIntegration = {
     ) {
         runExecCatching(onMessage, 'getAssertion', [clientData, rpId, userPin, userId]);
     },
+    nfcDevNull: function(onMessage /*callback (code, payload) -> void*/) {
+        runExecCatching(onMessage, 'nfcDevNull', []);
+    },
     reset: function(onMessage /*callback (code, payload) -> void*/) {
         runExecCatching(onMessage, 'reset', []);
     }
